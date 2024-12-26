@@ -3,9 +3,13 @@
 import { signIn, signOut } from 'next-auth/react';
 
 export async function signInAction() {
-    await signIn('google', {
-        redirectTo: '/account',
-    });
+    if (typeof window !== 'undefined') {
+        await signIn('Google', {
+            redirectTo: '/account',
+        });
+    } else {
+        console.error('signInAction is being called on the server, which is not supported.');
+    }
 }
 
 export async function signOutAction() {
