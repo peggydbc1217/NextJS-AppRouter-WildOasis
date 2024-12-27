@@ -1,7 +1,7 @@
 'use client';
 import { useState } from "react";
 import { updateGuest } from "@/app/_lib/action";
-import { useFormState } from "react-dom";
+import { SubmitButton } from "@/app/_components/SubmitButton";
 
 export default function UpdateProfileForm({ children, guest }) {
     const [count, setCount] = useState(0);
@@ -49,7 +49,10 @@ export default function UpdateProfileForm({ children, guest }) {
                     defaultValue={nationalID}
                     className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
                 />
-                <Button />
+                <SubmitButton pendingLabel="Updating..." >
+                    Update profile
+                </SubmitButton>
+
             </div>
 
             <div className="flex justify-end items-center gap-6">
@@ -59,12 +62,3 @@ export default function UpdateProfileForm({ children, guest }) {
     )
 }
 
-function Button() {
-    const { pending } = useFormState();
-
-    return (
-        <button className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300" disabled={pending}>
-            {pending ? 'Updating...' : 'Update profile'}
-        </button>
-    )
-}
