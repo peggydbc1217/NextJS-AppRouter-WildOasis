@@ -35,6 +35,7 @@ const authConfig = {
         //The session callback is called whenever a session is checked. It is used to add additional properties to the session object.
         session: async ({ session, token }) => {
             const guest = await getGuest(session.user.email);
+            //把guest id 添加到session中, 好讓任何頁面都可以使用
             session.user.guestId = guest.id;
             return session;
         }

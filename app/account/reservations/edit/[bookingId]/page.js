@@ -1,7 +1,14 @@
-export default function Page() {
-  // CHANGE
-  const reservationId = 23;
-  const maxCapacity = 23;
+import { getBooking } from '@/app/_lib/data-service';
+import { getCabin } from '@/app/_lib/data-service';
+import { updateBooking } from '@/app/_lib/action';
+
+
+export default async function Page({ params }) {
+  const { bookingId } = params;
+  const { numGuests, observations, cabinId } = await getBooking(bookingId);
+
+  const reservationId = bookingId;
+  const { maxCapacity } = await getCabin(cabinId);
 
   return (
     <div>
@@ -9,12 +16,14 @@ export default function Page() {
         Edit Reservation #{reservationId}
       </h2>
 
-      <form className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col">
+      <form className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col" action={updateBooking}>
+        <input type="hidden" name="bookingId" value={bookingId} />
         <div className="space-y-2">
           <label htmlFor="numGuests">How many guests?</label>
           <select
             name="numGuests"
             id="numGuests"
+            defaultValue={numGuests}
             className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
             required
           >
@@ -35,6 +44,7 @@ export default function Page() {
           </label>
           <textarea
             name="observations"
+            defaultValue={observations}
             className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
           />
         </div>
