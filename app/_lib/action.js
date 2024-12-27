@@ -86,7 +86,7 @@ export async function updateBooking(formData) {
     if (!session) {
         return { error: 'Unauthorized' };
     }
-    
+
     const bookingId = formData.get('bookingId'); // hidden input
 
     //2. authorize user
@@ -120,4 +120,34 @@ export async function updateBooking(formData) {
 
     //5. redirect user
     redirect('/account/reservations');
+}
+
+
+export async function createBooking(bookingData, formData) {
+    const session = await getServerSession();
+    if (!session) {
+        return { error: 'Unauthorized' };
+    }
+    const newBooking = {
+        ...bookingData,
+        guestId: session.user.guestId,
+        cabinId: bookingData.cabinId,
+        numGuests: formData.get('numGuests'),
+        observations: formData.get('observations').slice(0, 200).slice(0, 200),
+        extraPrice: 0,
+        totalPrice: 0,
+        isPaid: false,
+        hasBreakfast: false,
+        status: 'unconfirmed',
+    }
+
+    const { error } = await supabase.from("bookings").insert([newBooking]).select().single();
+
+    if (error) {
+        console.error(error);
+        throw new Error("Booking could not be created");
+    }
+
+    revalidatePath(`/cabins/${bookingData.cabinId}`);
+    redirect('/thankyou');
 }
