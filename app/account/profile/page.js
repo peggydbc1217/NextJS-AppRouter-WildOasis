@@ -1,5 +1,6 @@
 import UpdateProfileForm from "@/app/_components/UpdateProfileForm";
 import SelectCountry from "@/app/_components/SelectCountry";
+import { getServerSession } from "next-auth";
 
 
 
@@ -7,11 +8,9 @@ export const metadata = {
   title: "Update profile",
 };
 
-// CHANGE
-const countryFlag = "pt.jpg";
-const nationality = "portugal";
-
-export default function Page() {
+export default async function Page() {
+  const session = await getServerSession();
+  const guest = await getGuest(session.user.email);
 
   return (
     <div>
@@ -24,12 +23,12 @@ export default function Page() {
         faster and smoother. See you soon!
       </p>
 
-      <UpdateProfileForm >
+      <UpdateProfileForm guest={guest}>
         <SelectCountry
           name="nationality"
           id="nationality"
           className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
-          defaultCountry={nationality}
+          defaultCountry={guest.nationality}
         />
       </UpdateProfileForm>
 

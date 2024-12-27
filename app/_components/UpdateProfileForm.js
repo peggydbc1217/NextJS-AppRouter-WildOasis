@@ -1,16 +1,22 @@
 'use client';
 import { useState } from "react";
+import { updateGuest } from "@/app/_lib/action";
+import { useFormState } from "react-dom";
 
-export default function UpdateProfileForm({ children }) {
+export default function UpdateProfileForm({ children, guest }) {
     const [count, setCount] = useState(0);
-    const countryFlag = "pt.jpg";
+
+    const { fullName, email, nationality, nationalID, countryFlag } = guest;
 
     return (
-        <form className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col">
+        <form
+            action={updateGuest}
+            className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col" >
             <div className="space-y-2">
                 <label>Full name</label>
                 <input
-                    disabled
+                    name="fullName"
+                    defaultValue={fullName}
                     className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
                 />
             </div>
@@ -18,7 +24,8 @@ export default function UpdateProfileForm({ children }) {
             <div className="space-y-2">
                 <label>Email address</label>
                 <input
-                    disabled
+                    name="email"
+                    defaultValue={email}
                     className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
                 />
             </div>
@@ -39,15 +46,25 @@ export default function UpdateProfileForm({ children }) {
                 <label htmlFor="nationalID">National ID number</label>
                 <input
                     name="nationalID"
+                    defaultValue={nationalID}
                     className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
                 />
+                <Button />
             </div>
 
             <div className="flex justify-end items-center gap-6">
-                <button className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300">
-                    Update profile
-                </button>
+
             </div>
-        </form>
+        </form >
+    )
+}
+
+function Button() {
+    const { pending } = useFormState();
+
+    return (
+        <button className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300" disabled={pending}>
+            {pending ? 'Updating...' : 'Update profile'}
+        </button>
     )
 }
